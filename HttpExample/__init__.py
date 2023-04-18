@@ -2,18 +2,23 @@ import logging
 
 import azure.functions as func
 
-import asyncio
 
-async def my_async_function():
-    # Add your async code here
-    await asyncio.sleep(1)  # For example, simulate an async operation
-    
-    return "Async function completed successfully!"
-
-async def main(req: func.HttpRequest) -> func.HttpResponse:
+def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    # Call the async function
-    result = await my_async_function()
+    name = req.params.get('name')
+    if not name:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            name = req_body.get('name')
 
-    return func.HttpResponse(f"{result}")
+    if name:
+        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    else:
+        return func.HttpResponse(
+             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             status_code=200
+        )

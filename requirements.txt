@@ -7,4 +7,3 @@ pydevd-pycharm
 asyncio
 psycopg2-binary
 aiohttp
-aiohttp
